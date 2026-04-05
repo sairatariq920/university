@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khaadi | Shimmer & Shine</title>
+    <style>
+        :root {
+            --gold-text: #b8922e;
+            --light-gray: #f8f8f8;
+            --border-color: #eee;
+            --black: #1a1a1a;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Announcement Bar */
+        .announcement {
+            background-color: #c9dce4;
+            text-align: center;
+            padding: 8px;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Header & Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: rgb(255, 255, 255);
+            z-index: 1000;
+        }
+
+        .logo { font-weight: 900; font-size: 24px; letter-spacing: 2px; cursor: pointer; }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        nav ul li a { text-decoration: none; color: #333; }
+        .highlight { color: var(--gold-text); }
+
+        .header-icons { display: flex; gap: 15px; align-items: center; }
+        .cart-icon-btn { cursor: pointer; position: relative; }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 70vh;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('h1.png') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-text {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+        .hero-text h1 { font-size: 80px; margin: 0; line-height: 1; letter-spacing: 5px; }
+
+        /* Product Section */
+        .product-section { padding: 50px 40px; text-align: center; }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .product-card { text-align: left; position: relative; }
+        .product-card img { width: 100%; height: 400px; object-fit: cover; transition: 0.3s; border-radius: 4px; }
+        .product-card:hover img { transform: scale(1.02); }
+        .wishlist-icon {
+            position: absolute; top: 10px; right: 10px;
+            background: rgba(255,255,255,0.8); border-radius: 50%;
+            padding: 5px; cursor: pointer;
+        }
+        .product-info { padding: 15px 0; font-size: 13px; }
+        .product-price { font-weight: bold; margin-top: 5px; font-size: 15px; }
+
+        .add-to-cart-btn {
+            width: 100%; padding: 10px; background: var(--black); color: white;
+            border: none; margin-top: 10px; cursor: pointer; font-weight: bold;
+        }
+        .add-to-cart-btn:hover { background: var(--gold-text); }
+
+        /* --- SHOPPING CART SIDE PAGE --- */
+        #cart-sidebar {
+            position: fixed; top: 0; right: -450px;
+            width: 400px; height: 100%; background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 2000; transition: 0.4s ease;
+            display: flex; flex-direction: column;
+        }
+        #cart-sidebar.active { right: 0; }
+
+        .cart-header {
+            padding: 20px; border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .cart-items-list { flex: 1; overflow-y: auto; padding: 20px; }
+        .cart-item {
+            display: flex; gap: 15px; margin-bottom: 20px; align-items: center;
+            border-bottom: 1px solid #f9f9f9; padding-bottom: 10px;
+        }
+        .cart-item img { width: 60px; height: 80px; object-fit: cover; }
+        .remove-btn { color: red; font-size: 11px; cursor: pointer; text-decoration: underline; }
+
+        .cart-footer { padding: 20px; background: var(--light-gray); border-top: 1px solid var(--border-color); }
+        .total-box { display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-bottom: 15px; }
+        .checkout-btn { width: 100%; padding: 15px; background: var(--gold-text); color: white; border: none; font-weight: bold; cursor: pointer; }
+
+        /* Footer */
+        footer { background-color: white; padding: 60px 40px 20px; border-top: 1px solid var(--border-color); }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
+        .footer-col h4 { font-size: 14px; text-transform: uppercase; margin-bottom: 20px; }
+        .footer-col ul { list-style: none; padding: 0; line-height: 2; font-size: 13px; }
+        .bottom-bar {
+            margin-top: 50px; display: flex; justify-content: space-between;
+            align-items: center; border-top: 1px solid var(--border-color);
+            padding-top: 20px; font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="announcement">
+        Explore new styles designed for brighter days <strong><u>right here.</u></strong>
+    </div>
+
+    <header>
+        <div class="logo">KHAADI</div>
+        <nav>
+            <ul>
+                <li><a href="#">New In</a></li>
+                <li><a href="#" class="highlight">From Ramadan to Eid</a></li>
+                <li><a href="#">Ready to Wear</a></li>
+                <li><a href="#">Fabrics</a></li>
+            </ul>
+        </nav>
+        <div class="header-icons">
+            <span>🔍</span>
+            <span>👤</span>
+            <div class="cart-icon-btn" onclick="toggleCart()">
+                <span id="cart-count">👜 (0)</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>STUDIO</h1>
+            <p>SHIMMER & SHINE<br>ready to wear eid collection</p>
+        </div>
+    </section>
+
+    <section class="product-section">
+        <div class="product-grid">
+            <div class="product-card">
+                <span class="wishlist-icon">♡</span>
+                <img src="pic2.jpg" alt="Kurta">
+                <div class="product-info">
+                    <div>Embroidered | Cotton Dobby</div>
+                    <strong>Kurta</strong>
+                    <div class="product-price">PKR 4,000</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Kurta', 4000, 'pic2.jpg')">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="wishlist-icon">♡</span>
+                <img src="pic1.jpg" alt="Kurta">
+                <div class="product-info">
+                    <div>Embroidered | Textured Cotton</div>
+                    <strong>Short Solid Kurta</strong>
+                    <div class="product-price">PKR 5,300</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Short Solid Kurta', 5300, 'pic1.jpg')">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="wishlist-icon">♡</span>
+                <img src="print.jpg" alt="Floral Tunic">
+                <div class="product-info">
+                    <div>Digital Print | Fine Lawn</div>
+                    <strong>Floral Festive Tunic</strong>
+                    <div class="product-price">PKR 6,500</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Floral Festive Tunic', 6500, 'image_b17feb.jpg')">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <span class="wishlist-icon">♡</span>
+                <img src="zari.jpg" alt="Zari Work Suit">
+                <div class="product-info">
+                    <div>Zari Embroidery | Organza</div>
+                    <strong>Luxury Eid Suit</strong>
+                    <div class="product-price">PKR 12,500</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('Luxury Eid Suit', 12500, 'image_b16dc9.jpg')">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="cart-sidebar">
+        <div class="cart-header">
+            <h3>SHOPPING BAG</h3>
+            <span style="cursor:pointer; font-size: 24px;" onclick="toggleCart()">&times;</span>
+        </div>
+        <div class="cart-items-list" id="cart-items-list"></div>
+        <div class="cart-footer">
+            <div class="total-box">
+                <span>Subtotal</span>
+                <span id="display-total">PKR 0</span>
+            </div>
+            <button class="checkout-btn" onclick="alert('Proceeding to Checkout...')">CHECKOUT</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Help</h4>
+                <ul><li>FAQ</li><li>Terms & Conditions</li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>More from Khaadi</h4>
+                <ul><li>About Us</li><li>Blogs</li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <div style="display:flex; gap:5px;">
+                    <input type="email" placeholder="Email Address" style="padding:10px; border:1px solid #ccc; flex:1;">
+                    <button class="confirm-btn">OK</button>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-bar">
+            <div>© 2026 Weaves Corporation Limited.</div>
+        </div>
+    </footer>
+
+    <script>
+        let cart = [];
+
+        function toggleCart() {
+            document.getElementById('cart-sidebar').classList.toggle('active');
+        }
+
+        function addToCart(name, price, img) {
+            const item = { id: Date.now(), name, price, img };
+            cart.push(item);
+            updateCartUI();
+            document.getElementById('cart-sidebar').classList.add('active');
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cart-items-list');
+            const totalDisplay = document.getElementById('display-total');
+            const countDisplay = document.getElementById('cart-count');
+            
+            list.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                total += item.price;
+                list.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="cart-item-info">
+                            <strong>${item.name}</strong><br>
+                            <span>PKR ${item.price.toLocaleString()}</span><br>
+                            <span class="remove-btn" onclick="removeFromCart(${item.id})">Remove</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            totalDisplay.innerText = `PKR ${total.toLocaleString()}`;
+            countDisplay.innerText = `👜 (${cart.length})`;
+        }
+    </script>
+</body>
+</html>
